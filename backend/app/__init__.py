@@ -1,11 +1,12 @@
-from flask import Flask, jsonify  # Import the jsonify function
+# app/__init__.py
+
+from flask import Flask, jsonify
 
 app = Flask(__name__)
-app.config.from_pyfile('app/config.py')  # Load configuration from config.py
+app.config.from_pyfile('config.py')  # Load configuration from config.py
 
 
-# Import and register the routes from the "routes" folder
-from app.routes import user_routes, movie_routes, event_routes, booking_routes, show_routes
+from .routes import user_routes, movie_routes, event_routes, booking_routes, show_routes
 app.register_blueprint(user_routes.bp)
 app.register_blueprint(movie_routes.bp)
 app.register_blueprint(event_routes.bp)
@@ -27,7 +28,3 @@ def internal_server_error(error):
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
-# In the app.py file, we import the db object from db.py and initialize the MongoDB connection using db.init_app(app).
