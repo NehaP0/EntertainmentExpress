@@ -10,4 +10,3 @@ app.config.from_pyfile('config.py')
 client = MongoClient(app.config['MONGO_URI'])
 db = client['entertainmentexpress']
 
-# 'mongodb://neha:phadtare@localhost:27017/entertainmentexpress'
