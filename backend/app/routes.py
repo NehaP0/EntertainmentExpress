@@ -2,16 +2,17 @@ from flask import jsonify, request
 from bson import json_util
 from app import app, mongo
 
+
 # User endpoints
 @app.route("/api/users", methods=["GET"])
 def get_users():
     users = list(mongo.db.users.find())
-    return jsonify(json_util.dumps(users))
+    return (json_util.dumps(users))
 
-@app.route("/api/users/<user_id>", methods=["GET"])
-def get_user(user_id):
-    user = mongo.db.users.find_one({"_id": user_id})
-    return jsonify(json_util.dumps(user))
+@app.route("/api/users/<username>", methods=["GET"])
+def get_user(username):
+    user = mongo.db.users.find_one({"username": username})
+    return (json_util.dumps(user))
 
 @app.route("/api/users", methods=["POST"])
 def create_user():
@@ -26,12 +27,13 @@ def create_user():
     }
     result = mongo.db.users.insert_one(user)
     user["_id"] = str(result.inserted_id)
-    return jsonify(user), 201
+    return (user), 201
 
 @app.route("/api/users/<user_id>", methods=["PUT"])
 def update_user(user_id):
     data = request.get_json()
     updated_user = {
+        "id":data["_id"],
         "username": data["username"],
         "status": data["status"],
         "gender": data["gender"],
@@ -40,23 +42,23 @@ def update_user(user_id):
         "date_of_birth": data["date_of_birth"]
     }
     mongo.db.users.update_one({"_id": user_id}, {"$set": updated_user})
-    return jsonify(updated_user)
+    return (updated_user)
 
-@app.route("/api/users/<user_id>", methods=["DELETE"])
-def delete_user(user_id):
-    mongo.db.users.delete_one({"_id": user_id})
-    return jsonify({"message": "User deleted"})
+@app.route("/api/users/<username>", methods=["DELETE"])
+def delete_user(username):
+    mongo.db.users.delete_one({"username": username})
+    return ({"message": "User deleted"})
 
 # Movie and Show endpoints
 @app.route("/api/movies", methods=["GET"])
 def get_movies():
     movies = list(mongo.db.movies.find())
-    return jsonify(json_util.dumps(movies))
+    return (json_util.dumps(movies))
 
 @app.route("/api/movies/<movie_id>/shows", methods=["GET"])
 def get_movie_shows(movie_id):
     shows = list(mongo.db.shows.find({"movie_id": movie_id}))
-    return jsonify(json_util.dumps(shows))
+    return (json_util.dumps(shows))
 
 @app.route("/api/movies", methods=["POST"])
 def create_movie():
@@ -67,7 +69,7 @@ def create_movie():
     }
     result = mongo.db.movies.insert_one(movie)
     movie["_id"] = str(result.inserted_id)
-    return jsonify(movie), 201
+    return (movie), 201
 
 @app.route("/api/movies/<movie_id>", methods=["PUT"])
 def update_movie(movie_id):
@@ -77,23 +79,23 @@ def update_movie(movie_id):
         "description": data["description"]
     }
     mongo.db.movies.update_one({"_id": movie_id}, {"$set": updated_movie})
-    return jsonify(updated_movie)
+    return (updated_movie)
 
 @app.route("/api/movies/<movie_id>", methods=["DELETE"])
 def delete_movie(movie_id):
     mongo.db.movies.delete_one({"_id": movie_id})
-    return jsonify({"message": "Movie deleted"})
+    return ({"message": "Movie deleted"})
 
 # Event and Participant endpoints
 @app.route("/api/events", methods=["GET"])
 def get_events():
     events = list(mongo.db.events.find())
-    return jsonify(json_util.dumps(events))
+    return (json_util.dumps(events))
 
 @app.route("/api/events/<event_id>/participants", methods=["GET"])
 def get_event_participants(event_id):
     participants = list(mongo.db.participants.find({"event_id": event_id}))
-    return jsonify(json_util.dumps(participants))
+    return (json_util.dumps(participants))
 
 @app.route("/api/events", methods=["POST"])
 def create_event():
@@ -104,7 +106,7 @@ def create_event():
     }
     result = mongo.db.events.insert_one(event)
     event["_id"] = str(result.inserted_id)
-    return jsonify(event), 201
+    return (event), 201
 
 @app.route("/api/events/<event_id>", methods=["PUT"])
 def update_event(event_id):
@@ -114,17 +116,17 @@ def update_event(event_id):
         "description": data["description"]
     }
     mongo.db.events.update_one({"_id": event_id}, {"$set": updated_event})
-    return jsonify(updated_event)
+    return (updated_event)
 
 @app.route("/api/events/<event_id>", methods=["DELETE"])
 def delete_event(event_id):
     mongo.db.events.delete_one({"_id": event_id})
-    return jsonify({"message": "Event deleted"})
+    return ({"message": "Event deleted"})
 
 # Show hierarchy endpoints
 @app.route("/api/shows", methods=["GET"])
 def get_shows():
     shows = list(mongo.db.shows.find())
-    return jsonify(json_util.dumps(shows))
+    return (json_util.dumps(shows))
 
 # Add more endpoints for show hierarchy as per your requirements
